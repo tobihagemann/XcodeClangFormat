@@ -161,7 +161,7 @@ NSUserDefaults* defaults = nil;
     auto replaces = clang::format::reformat(format, code, ranges, filename);
     auto result = clang::tooling::applyAllReplacements(code, replaces);
 
-    if (!result) {
+    if (result.empty()) {
         // We could not apply the calculated replacements.
         completionHandler([NSError
             errorWithDomain:errorDomain
@@ -178,8 +178,8 @@ NSUserDefaults* defaults = nil;
     [invocation.buffer.selections removeAllObjects];
 
     // Update the entire text with the result we got after applying the replacements.
-    invocation.buffer.completeBuffer = [[NSString alloc] initWithBytes:result->data()
-                                                                length:result->size()
+    invocation.buffer.completeBuffer = [[NSString alloc] initWithBytes:result.data()
+                                                                length:result.size()
                                                               encoding:NSUTF8StringEncoding];
 
     // Recalculate the line offsets.
